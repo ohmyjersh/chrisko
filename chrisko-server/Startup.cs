@@ -29,6 +29,11 @@ namespace ChrisKo
         {
             // Add framework services.
             services.AddMvc();
+
+            // services.AddDistributedRedisCache( option => {
+            //     option.Configuration = "127.0.0.1:6379";
+            //     option.InstanceName = "chrisko";
+            // });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
