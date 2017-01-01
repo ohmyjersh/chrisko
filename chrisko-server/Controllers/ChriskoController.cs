@@ -31,15 +31,13 @@ namespace ChrisKo.Controllers
         public IActionResult Get(string id)
         {
             var storedChrisko =  GetChrisko(id);
+            Console.WriteLine(storedChrisko.Visits);
             if (storedChrisko != null)
             {
                 // Update store with increased Visits
-                var newChrisko = IncreaseVisit(storedChrisko);
-                var output = JsonConvert.SerializeObject(newChrisko);
-                var encodedChrisko = Encoding.UTF8.GetBytes(output);
-                Store.Set(newChrisko.Id, encodedChrisko);
-
-
+                var newChrisko = GenerateChrisko(storedChrisko.Url, storedChrisko.Id, storedChrisko.Visits + 1);
+                Console.WriteLine(newChrisko.Visits);
+                SaveOrUpdateStore(newChrisko);
                 return Redirect(storedChrisko.Url);
             }
             else
@@ -62,19 +60,11 @@ namespace ChrisKo.Controllers
             return Json(storedChrisko);
         }
 
-        public Chrisko IncreaseVisit(Chrisko oldChrisko) {
-            return new Chrisko {
-                Url = oldChrisko.Url,
-                Id = oldChrisko.Id,
-                Visits = oldChrisko.Visits + 1
-            };
-        }
-
         public Chrisko GenerateChrisko(string url, string id, int visits = 0) {
             return new Chrisko {
                 Id = id,
                 Url = url,
-                Visits = 0
+                Visits = visits
             };
         }
 
@@ -90,8 +80,7 @@ namespace ChrisKo.Controllers
                 return null;
             }
             var encoded = Encoding.UTF8.GetString(value);
-            var serialized = JsonConvert.DeserializeObject<Chrisko>(encoded);
-            return serialized;
+            return JsonConvert.DeserializeObject<Chrisko>(encoded);
         }
     }
 }
