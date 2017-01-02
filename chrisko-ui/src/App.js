@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import * as actions from './chrisko';
 import {Input, Button, Alert, Spin, Card } from 'antd';
 import './App.css';
+import Logo from './logo.png';
 
 class App extends Component {
   componentWillMount() {
@@ -31,11 +32,11 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.props.state);
     return (
       <div className="App">
       { this.props.state.loadApp ? 
       <Card>
+        <img alt="logo" width="50%" src={Logo} />
         <div style={styles.inputBar}>
           <Input style={styles.textInput} onChange={this.onChange}  onKeyDown={this.onKeyDown} addonAfter={<Button type="primary" onClick={this.createChrisko} >Submit</Button>} />
         </div>

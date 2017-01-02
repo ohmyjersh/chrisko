@@ -44,7 +44,6 @@ export function getChrisko(key) {
                 redirect: 'follow',
                cache: 'default' })
             .then(response => {
-              console.log(response);
               if(response.status !== 200) {
                 dispatch(updateState({error:`http://localhost:5000/${key}`}));
                 dispatch(updateState({loadApp:true}));
