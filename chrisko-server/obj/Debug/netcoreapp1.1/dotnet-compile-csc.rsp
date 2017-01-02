@@ -176,6 +176,7 @@
 "/Users/joshjarmain/Development/chrisko/chrisko-server/Program.cs"
 "/Users/joshjarmain/Development/chrisko/chrisko-server/Startup.cs"
 "/Users/joshjarmain/Development/chrisko/chrisko-server/Controllers/ChriskoController.cs"
+"/Users/joshjarmain/Development/chrisko/chrisko-server/Controllers/HealthController.cs"
 "/Users/joshjarmain/Development/chrisko/chrisko-server/Models/Chrisko.cs"
 "/Users/joshjarmain/Development/chrisko/chrisko-server/Models/ChriskoRequest.cs"
 "/Users/joshjarmain/Development/chrisko/chrisko-server/Store/IRedisService.cs"

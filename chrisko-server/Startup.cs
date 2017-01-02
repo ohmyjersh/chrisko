@@ -29,7 +29,6 @@ namespace ChrisKo
         {
             // Add framework services.
             services.AddMvc();
-
             // services.AddDistributedRedisCache( option => {
             //     option.Configuration = "127.0.0.1:6379";
             //     option.InstanceName = "chrisko";
@@ -41,7 +40,8 @@ namespace ChrisKo
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
+            app.UseCors(builder =>
+                    builder.WithOrigins("*"));
             app.UseMvc();
         }
     }

@@ -1,10 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using ChrisKo.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
@@ -31,14 +26,13 @@ namespace ChrisKo.Controllers
         public IActionResult Get(string id)
         {
             var storedChrisko =  GetChrisko(id);
-            Console.WriteLine(storedChrisko.Visits);
             if (storedChrisko != null)
             {
                 // Update store with increased Visits
                 var newChrisko = GenerateChrisko(storedChrisko.Url, storedChrisko.Id, storedChrisko.Visits + 1);
-                Console.WriteLine(newChrisko.Visits);
                 SaveOrUpdateStore(newChrisko);
-                return Redirect(storedChrisko.Url);
+                //return Redirect(storedChrisko.Url);
+                return Redirect("http://google.com");
             }
             else
             {
@@ -50,6 +44,7 @@ namespace ChrisKo.Controllers
         [HttpPost]
         public IActionResult Post([FromBody]ChriskoRequest request)
         {
+            Console.WriteLine(request.Url);
             var chrisko = GenerateChrisko(request.Url, Guid.NewGuid().ToString().Substring(0,6));
             SaveOrUpdateStore(chrisko);
 
