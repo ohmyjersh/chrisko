@@ -18,8 +18,8 @@ class App extends Component {
     this.props.actions.updateState({error:''});
   }
   createChrisko = () => {
-    this.props.actions.updateState({error:''});
-    this.props.actions.createChrisko(this.props.state.input);
+      this.props.actions.updateState({error:''});
+      this.props.actions.createChrisko(this.props.state.input);
   }
   onChange = (e)  => {
     this.props.actions.updateState({input:e.target.value});
@@ -54,7 +54,7 @@ class App extends Component {
               </li> : null }
             {this.props.state.chriskos.map((x, index) => { 
               return <li key={index}>
-                  <Alert message={`${x.id}`} description={`${x.url}`} type="success" showIcon />
+                  <Alert message={`${x.shortUrl}`} description={`${x.url}`} type="success" showIcon />
                 </li> 
             })}
           </ul>

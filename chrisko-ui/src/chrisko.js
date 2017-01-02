@@ -1,3 +1,5 @@
+import * as api from './api';
+
 const CHRISKO_CREATED = "CHRISKO_CREATED";
 const UPDATE_STATE = "UPDATE_STATE";
 
@@ -15,7 +17,11 @@ export default (state = initialState, action) => {
             return Object.assign({}, state, action.value);
         }
         case CHRISKO_CREATED: {
-            var newArry = [action.json].concat(state.chriskos)
+            var newArry = [{
+                url: action.json.url,
+                shortUrl: api.shortUrl(action.json.id),
+                visits: action.json.visits
+            }].concat(state.chriskos)
             return Object.assign({}, state, {chriskos:newArry});
         }
         default: {
@@ -40,12 +46,13 @@ function chriskoCreated(json) {
 
 export function getChrisko(key) {
   return dispatch => {
-    return fetch(`http://localhost:5000/api/chrisko/${key}`, { method: 'GET', mode: 'cors',
+    return fetch(api.getChrisko(key), { method: 'GET', mode: 'cors',
                 redirect: 'follow',
                cache: 'default' })
             .then(response => {
+                console.log(response);
               if(response.status !== 200) {
-                dispatch(updateState({error:`http://localhost:5000/${key}`}));
+                dispatch(updateState({error:api.shortUrl(key)}));
                 dispatch(updateState({loadApp:true}));
               }
               else {
@@ -63,7 +70,7 @@ export function getChrisko(key) {
 export function createChrisko(url) {
   return dispatch => {
     dispatch(updateState({fetching:true}));
-    return fetch(`http://localhost:5000/api/chrisko`, { 
+    return fetch(api.createChrisko, { 
         method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -82,7 +89,12 @@ export function createChrisko(url) {
             .then((json) => {
                 dispatch(chriskoCreated(json));
                 dispatch(updateState({fetching:false}));
-            });
-    };
+            })
+            .catch(function() {
+                console.log('catch error');
+                dispatch(updateState({error:`Error creating the chrisko`}));
+                dispatch(updateState({fetching:false}));
+        });
+  }
 }
 

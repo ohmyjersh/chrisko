@@ -24,15 +24,15 @@ namespace ChrisKo.Controllers
         // GET api/values/5
         [HttpGet("{id}")]
         public IActionResult Get(string id)
-        {
+        { 
+            Console.WriteLine("id:{0}",id);
             var storedChrisko =  GetChrisko(id);
             if (storedChrisko != null)
             {
                 // Update store with increased Visits
                 var newChrisko = GenerateChrisko(storedChrisko.Url, storedChrisko.Id, storedChrisko.Visits + 1);
                 SaveOrUpdateStore(newChrisko);
-                //return Redirect(storedChrisko.Url);
-                return Redirect("http://google.com");
+                return Redirect(storedChrisko.Url);
             }
             else
             {
@@ -44,8 +44,7 @@ namespace ChrisKo.Controllers
         [HttpPost]
         public IActionResult Post([FromBody]ChriskoRequest request)
         {
-            Console.WriteLine(request.Url);
-            var chrisko = GenerateChrisko(request.Url, Guid.NewGuid().ToString().Substring(0,6));
+            var chrisko = GenerateChrisko(GetUri(request.Url).AbsoluteUri, Guid.NewGuid().ToString().Substring(0,6));
             SaveOrUpdateStore(chrisko);
 
             var storedChrisko = GetChrisko(chrisko.Id);
@@ -63,10 +62,15 @@ namespace ChrisKo.Controllers
             };
         }
 
+        public Uri GetUri(string s)
+        {
+            return new UriBuilder(s).Uri;
+        }
+
         public void SaveOrUpdateStore(Chrisko chrisko) {
             var output = JsonConvert.SerializeObject(chrisko);
             var encodedChrisko = Encoding.UTF8.GetBytes(output);
-            Store.Set(chrisko.Id,encodedChrisko, new DistributedCacheEntryOptions());
+            Store.Set(chrisko.Id, encodedChrisko, new DistributedCacheEntryOptions());
         }
 
         public Chrisko GetChrisko(string key) {
