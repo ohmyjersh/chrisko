@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ChrisKo.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -40,6 +41,8 @@ namespace ChrisKo
                 options.ConnectionString = Configuration.GetSection("ConnectionStrings:MongoConnection:ConnectionString").Value;
                 options.Database = Configuration.GetSection("ConnectionStrings:MongoConnection:Database").Value;
             });
+
+            services.AddTransient<IChriskoRepository, ChriskoRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

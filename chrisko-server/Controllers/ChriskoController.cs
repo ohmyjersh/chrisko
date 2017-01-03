@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using ChrisKo.Models;
+using ChrisKo.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Redis;
@@ -11,8 +12,10 @@ namespace ChrisKo.Controllers
     [Route("api/[controller]")]
     public class ChriskoController : Controller
     {
+        private readonly IChriskoRepository _chriskoRepository;
         private RedisCache Store;
-        public ChriskoController() {
+        public ChriskoController(IChriskoRepository chriskoRepository) {
+            _chriskoRepository = chriskoRepository;
             Console.WriteLine("Connecting to cache");
             Store = new RedisCache(new RedisCacheOptions
             {
@@ -45,9 +48,11 @@ namespace ChrisKo.Controllers
         public IActionResult Post([FromBody]ChriskoRequest request)
         {
             var chrisko = GenerateChrisko(GetUri(request.Url).AbsoluteUri, Guid.NewGuid().ToString().Substring(0,6));
-            SaveOrUpdateStore(chrisko);
+            _chriskoRepository.AddChriskoAsync(chrisko);
+            //SaveOrUpdateStore(chrisko);
 
-            var storedChrisko = GetChrisko(chrisko.shortUrl);
+            //var storedChrisko = GetChrisko(chrisko.shortUrl);
+            var storedChrisko = _chriskoRepository.GetChriskoByIdAsync(chrisko.Id);
             if (storedChrisko == null) {
                 return BadRequest();
             }
