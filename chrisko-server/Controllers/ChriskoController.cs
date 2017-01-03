@@ -22,15 +22,15 @@ namespace ChrisKo.Controllers
         }
 
         // GET api/values/5
-        [HttpGet("{id}")]
-        public IActionResult Get(string id)
+        [HttpGet("{shortUrl}")]
+        public IActionResult Get(string shortUrl)
         { 
-            Console.WriteLine("id:{0}",id);
-            var storedChrisko =  GetChrisko(id);
+            Console.WriteLine("shortUrl:{0}",shortUrl);
+            var storedChrisko =  GetChrisko(shortUrl);
             if (storedChrisko != null)
             {
                 // Update store with increased Visits
-                var newChrisko = GenerateChrisko(storedChrisko.Url, storedChrisko.Id, storedChrisko.Visits + 1);
+                var newChrisko = GenerateChrisko(storedChrisko.Url, storedChrisko.shortUrl, storedChrisko.Visits + 1);
                 SaveOrUpdateStore(newChrisko);
                 return Redirect(storedChrisko.Url);
             }
@@ -47,16 +47,16 @@ namespace ChrisKo.Controllers
             var chrisko = GenerateChrisko(GetUri(request.Url).AbsoluteUri, Guid.NewGuid().ToString().Substring(0,6));
             SaveOrUpdateStore(chrisko);
 
-            var storedChrisko = GetChrisko(chrisko.Id);
+            var storedChrisko = GetChrisko(chrisko.shortUrl);
             if (storedChrisko == null) {
                 return BadRequest();
             }
             return Json(storedChrisko);
         }
 
-        public Chrisko GenerateChrisko(string url, string id, int visits = 0) {
+        public Chrisko GenerateChrisko(string url, string shortUrl, int visits = 0) {
             return new Chrisko {
-                Id = id,
+                shortUrl = shortUrl,
                 Url = url,
                 Visits = visits
             };
@@ -70,7 +70,7 @@ namespace ChrisKo.Controllers
         public void SaveOrUpdateStore(Chrisko chrisko) {
             var output = JsonConvert.SerializeObject(chrisko);
             var encodedChrisko = Encoding.UTF8.GetBytes(output);
-            Store.Set(chrisko.Id, encodedChrisko, new DistributedCacheEntryOptions());
+            Store.Set(chrisko.shortUrl, encodedChrisko, new DistributedCacheEntryOptions());
         }
 
         public Chrisko GetChrisko(string key) {
