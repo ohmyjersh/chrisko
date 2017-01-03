@@ -29,12 +29,14 @@ namespace ChrisKo.Controllers
         public IActionResult Get(string shortUrl)
         { 
             Console.WriteLine("shortUrl:{0}",shortUrl);
-            var storedChrisko =  GetChrisko(shortUrl);
+            //var storedChrisko =  GetChrisko(shortUrl);
+            var storedChrisko = _chriskoRepository.GetChriskoByShortUrlAsync(shortUrl).Result;
             if (storedChrisko != null)
             {
                 // Update store with increased Visits
                 var newChrisko = GenerateChrisko(storedChrisko.Url, storedChrisko.shortUrl, storedChrisko.Visits + 1);
-                SaveOrUpdateStore(newChrisko);
+                //SaveOrUpdateStore(newChrisko);
+                _chriskoRepository.UpdateChriskoAsync(storedChrisko.Id, newChrisko);
                 return Redirect(storedChrisko.Url);
             }
             else
@@ -56,7 +58,7 @@ namespace ChrisKo.Controllers
             if (storedChrisko == null) {
                 return BadRequest();
             }
-            return Json(storedChrisko);
+            return Json(storedChrisko.Result);
         }
 
         public Chrisko GenerateChrisko(string url, string shortUrl, int visits = 0) {

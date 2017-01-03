@@ -18,8 +18,9 @@ export default (state = initialState, action) => {
         }
         case CHRISKO_CREATED: {
             var newArry = [{
+                id: action.json.id,
                 url: action.json.url,
-                shortUrl: api.shortUrl(action.json.id),
+                shortUrl: api.shortUrl(action.json.shortUrl),
                 visits: action.json.visits
             }].concat(state.chriskos)
             return Object.assign({}, state, {chriskos:newArry});
