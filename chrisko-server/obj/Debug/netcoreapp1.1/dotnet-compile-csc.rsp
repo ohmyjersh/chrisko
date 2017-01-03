@@ -181,6 +181,8 @@
 -resource:"/Users/joshjarmain/Development/chrisko/chrisko-server/obj/Debug/netcoreapp1.1/chrisko-serverdotnet-compile.deps.json",chrisko-server.deps.json
 "/Users/joshjarmain/Development/chrisko/chrisko-server/Program.cs"
 "/Users/joshjarmain/Development/chrisko/chrisko-server/Startup.cs"
+"/Users/joshjarmain/Development/chrisko/chrisko-server/Cache/IRedisService.cs"
+"/Users/joshjarmain/Development/chrisko/chrisko-server/Cache/RedisService.cs"
 "/Users/joshjarmain/Development/chrisko/chrisko-server/Config/ChriskoContext.cs"
 "/Users/joshjarmain/Development/chrisko/chrisko-server/Controllers/ChriskoController.cs"
 "/Users/joshjarmain/Development/chrisko/chrisko-server/Controllers/HealthController.cs"
@@ -189,5 +191,3 @@
 "/Users/joshjarmain/Development/chrisko/chrisko-server/Models/Settings.cs"
 "/Users/joshjarmain/Development/chrisko/chrisko-server/Repository/ChriskoRepository.cs"
 "/Users/joshjarmain/Development/chrisko/chrisko-server/Repository/IChriskoRepository.cs"
-"/Users/joshjarmain/Development/chrisko/chrisko-server/Store/IRedisService.cs"
-"/Users/joshjarmain/Development/chrisko/chrisko-server/Store/RedisService.cs"
