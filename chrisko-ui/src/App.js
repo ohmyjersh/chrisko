@@ -3,7 +3,6 @@ import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './chrisko';
 import {Input, Button, Alert, Spin, Card } from 'antd';
-import './App.css';
 import Logo from './logo.png';
 
 class App extends Component {
@@ -33,7 +32,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div className="App" style={styles.app}>
       { this.props.state.loadApp ? 
       <Card>
         <img alt="logo" width="50%" src={Logo} />
@@ -81,24 +80,23 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-const AppContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App)
-
-export default AppContainer;
+export default connect(mapStateToProps,mapDispatchToProps)(App);
 
 
 const styles = {
-  card: {
-    width: '',
-    height: ''
+  app: {
+    textAlign: 'center',
+    marginRight: 'auto',
+    marginLeft: 'auto',
+    width: '800px',
+    marginTop:'20px'
   },
   spinner: {
     marginBottom: '10px',
     marginTop: '10px'
   },
   inputBar: {
+    marginTop:'10px',
     marginBottom: '10px'
   },
   textInput : {
