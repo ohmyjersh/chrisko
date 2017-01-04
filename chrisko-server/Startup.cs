@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ChrisKo.Cache;
 using ChrisKo.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Redis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -30,19 +33,24 @@ namespace ChrisKo
         {
             // Add framework services.
             services.AddMvc();
-
-            // services.AddDistributedRedisCache( option => {
-            //     option.Configuration = "127.0.0.1:6379";
-            //     option.InstanceName = "chrisko";
-            // });
-
+            
             services.Configure<Settings>(options =>
             {
                 options.ConnectionString = Configuration.GetSection("ConnectionStrings:MongoConnection:ConnectionString").Value;
                 options.Database = Configuration.GetSection("ConnectionStrings:MongoConnection:Database").Value;
             });
-
             services.AddTransient<IChriskoRepository, ChriskoRepository>();
+
+                services.AddSingleton<IDistributedCache>(factory =>
+                {
+                    return new RedisCache(new RedisCacheOptions
+                    {
+                        Configuration = Configuration.GetSection("ConnectionStrings:RedisConnection:Database").Value,
+                        InstanceName = Configuration.GetSection("ConnectionStrings:RedisConnection:Database").Value
+                    });
+                });
+                services.AddSingleton<IRedisService, RedisService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

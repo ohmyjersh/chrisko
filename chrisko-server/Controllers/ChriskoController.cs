@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using ChrisKo.Cache;
 using ChrisKo.Models;
 using ChrisKo.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -13,15 +14,10 @@ namespace ChrisKo.Controllers
     public class ChriskoController : Controller
     {
         private readonly IChriskoRepository _chriskoRepository;
-        private RedisCache Store;
-        public ChriskoController(IChriskoRepository chriskoRepository) {
+        private IRedisService _redisService;
+        public ChriskoController(IChriskoRepository chriskoRepository, IRedisService redisService) {
             _chriskoRepository = chriskoRepository;
-            Console.WriteLine("Connecting to cache");
-            Store = new RedisCache(new RedisCacheOptions
-            {
-                Configuration = "127.0.0.1:6379",
-                InstanceName = "chrisko"
-            });
+            _redisService = redisService;
         }
 
         // GET api/values/5
@@ -74,19 +70,19 @@ namespace ChrisKo.Controllers
             return new UriBuilder(s).Uri;
         }
 
-        public void SaveOrUpdateStore(Chrisko chrisko) {
-            var output = JsonConvert.SerializeObject(chrisko);
-            var encodedChrisko = Encoding.UTF8.GetBytes(output);
-            Store.Set(chrisko.shortUrl, encodedChrisko, new DistributedCacheEntryOptions());
-        }
+        // public void SaveOrUpdateStore(Chrisko chrisko) {
+        //     var output = JsonConvert.SerializeObject(chrisko);
+        //     var encodedChrisko = Encoding.UTF8.GetBytes(output);
+        //     Store.Set(chrisko.shortUrl, encodedChrisko, new DistributedCacheEntryOptions());
+        // }
 
-        public Chrisko GetChrisko(string key) {
-            var value = Store.Get(key);
-            if(value == null) {
-                return null;
-            }
-            var encoded = Encoding.UTF8.GetString(value);
-            return JsonConvert.DeserializeObject<Chrisko>(encoded);
-        }
+        // public Chrisko GetChrisko(string key) {
+        //     var value = Store.Get(key);
+        //     if(value == null) {
+        //         return null;
+        //     }
+        //     var encoded = Encoding.UTF8.GetString(value);
+        //     return JsonConvert.DeserializeObject<Chrisko>(encoded);
+        // }
     }
 }
