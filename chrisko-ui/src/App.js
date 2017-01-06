@@ -5,14 +5,72 @@ import * as actions from './chrisko';
 import {Input, Button, Alert, Spin, Card } from 'antd';
 import Logo from './logo.png';
 
+ export const InputBar = props => { 
+  const createChrisko = (inputValue) => {
+    console.log(inputValue);
+      props.actions.updateState({error:''});
+      props.actions.createChrisko(inputValue);
+  }
+  const onChange = (e)  => {
+    props.actions.updateState({input:e.target.value});
+  }
 
-export const inputBar = (barStyles, onChange,onKeyDown, createChrisko, textInput) => { 
+  const onKeyDown = (e, inputValue) => {
+    if(e.key === 'Enter'){
+      createChrisko(inputValue);
+    }
+  }
   return (
-    <div style={barStyles.textInput}>
-      <Input value={textInput} style={barStyles.textInput} onChange={onChange}  onKeyDown={(e) => onKeyDown(e, textInput)} addonAfter={<Button type="primary" onClick={(e) => createChrisko(textInput)}>Submit</Button>} />
+    <div style={styles.textInput}>
+      <Input value={props.state.textInput} style={styles.textInput} onChange={onChange}  onKeyDown={(e) => onKeyDown(e, props.state.textInput)} addonAfter={<Button type="primary" onClick={(e) => createChrisko(props.state.textInput)}>Submit</Button>} />
     </div>
   )
 }
+
+  export const ErrorAlert = props => {
+    const onClose = () => {
+      props.actions.updateState({error:''});
+    }
+    return (
+      <div>
+        { 
+          props.error ? 
+               <li> 
+                  <Alert message="Chrisko Error!"
+                  description={props.error}
+                  type="error"
+                  closable
+                  onClose={onClose}
+                  showIcon/>
+              </li> : null 
+            } 
+      </div>
+    )
+  }
+
+  export const ChriskoAlerts = props => {
+    console.log('alerts', props);
+    return (
+      <div>
+        {props.chriskos.chriskos.map((x, index) => { 
+          return <li key={index}>
+              <Alert message={`${x.shortUrl}`} description={`${x.url}`} type="success" showIcon />
+                </li> 
+            })}
+            </div>
+    )
+  }
+
+  export const ChriskoList = props => {
+    console.log('list', props);
+    return (
+        <ul>
+            <ErrorAlert error={this.props.state.error} actions={this.props.actions}/>
+            <ChriskoAlerts chriskos={this.props.state.chriskos}/>
+        </ul>
+    )
+  }
+
 
 class App extends Component {
   componentWillMount() {
@@ -22,50 +80,16 @@ class App extends Component {
       this.props.actions.getChrisko(this.props.params.key);
     }
   }
-  onClose = () => {
-    this.props.actions.updateState({error:''});
-  }
-  createChrisko = (inputValue) => {
-    console.log(inputValue);
-      this.props.actions.updateState({error:''});
-      this.props.actions.createChrisko(inputValue);
-  }
-  onChange = (e)  => {
-    this.props.actions.updateState({input:e.target.value});
-  }
-
-  onKeyDown = (e, inputValue) => {
-    if(e.key === 'Enter'){
-      this.createChrisko(inputValue);
-    }
-  }
 
   render() {
-    console.log(this.props.state.input);
     return (
       <div className="App" style={styles.app}>
       { this.props.state.loadApp ? 
       <Card>
         <img alt="logo" width="50%" src={Logo} />
-        {inputBar(styles,this.onChange,this.onKeyDown, this.createChrisko, this.props.state.input)}
+        <InputBar state={{textInput: this.props.state.input}} actions={this.props.actions}/>
         {this.props.state.fetching ? <Spin style={styles.spinner}/> : null}
-          <ul>
-            { 
-               this.props.state.error ? 
-               <li> 
-                  <Alert message="Chrisko Error!"
-                  description={this.props.state.error}
-                  type="error"
-                  closable
-                  onClose={this.onClose}
-                  showIcon/>
-              </li> : null }
-            {this.props.state.chriskos.map((x, index) => { 
-              return <li key={index}>
-                  <Alert message={`${x.shortUrl}`} description={`${x.url}`} type="success" showIcon />
-                </li> 
-            })}
-          </ul>
+        <ChriskoList props={this.props.state}/>
         </Card> : null
       }
       </div>
