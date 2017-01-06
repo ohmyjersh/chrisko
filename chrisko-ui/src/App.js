@@ -5,6 +5,15 @@ import * as actions from './chrisko';
 import {Input, Button, Alert, Spin, Card } from 'antd';
 import Logo from './logo.png';
 
+
+export const inputBar = (barStyles, onChange,onKeyDown, createChrisko, textInput) => { 
+  return (
+    <div style={barStyles.textInput}>
+      <Input value={textInput} style={barStyles.textInput} onChange={onChange}  onKeyDown={(e) => onKeyDown(e, textInput)} addonAfter={<Button type="primary" onClick={(e) => createChrisko(textInput)}>Submit</Button>} />
+    </div>
+  )
+}
+
 class App extends Component {
   componentWillMount() {
     if(this.props.params.key && !this.props.state.error)
@@ -16,29 +25,29 @@ class App extends Component {
   onClose = () => {
     this.props.actions.updateState({error:''});
   }
-  createChrisko = () => {
+  createChrisko = (inputValue) => {
+    console.log(inputValue);
       this.props.actions.updateState({error:''});
-      this.props.actions.createChrisko(this.props.state.input);
+      this.props.actions.createChrisko(inputValue);
   }
   onChange = (e)  => {
     this.props.actions.updateState({input:e.target.value});
   }
 
-  onKeyDown = (e) => {
+  onKeyDown = (e, inputValue) => {
     if(e.key === 'Enter'){
-      this.createChrisko();
+      this.createChrisko(inputValue);
     }
   }
 
   render() {
+    console.log(this.props.state.input);
     return (
       <div className="App" style={styles.app}>
       { this.props.state.loadApp ? 
       <Card>
         <img alt="logo" width="50%" src={Logo} />
-        <div style={styles.inputBar}>
-          <Input style={styles.textInput} onChange={this.onChange}  onKeyDown={this.onKeyDown} addonAfter={<Button type="primary" onClick={this.createChrisko} >Submit</Button>} />
-        </div>
+        {inputBar(styles,this.onChange,this.onKeyDown, this.createChrisko, this.props.state.input)}
         {this.props.state.fetching ? <Spin style={styles.spinner}/> : null}
           <ul>
             { 
