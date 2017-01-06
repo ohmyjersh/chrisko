@@ -6,6 +6,7 @@
     "react-scripts": "0.8.4",
     "react-test-renderer": "^15.4.1"
   },
+  "proxy": "http://localhost:5000",
   "dependencies": {
     "antd": "^2.5.3",
     "react": "^15.4.1",
